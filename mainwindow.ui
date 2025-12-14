@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Интерактивный помощник для составления заявлений на получение социальных выплат</string>
+  </property>
+  <property name="windowIcon">
+   <iconset theme="QIcon::ThemeIcon::DocumentNew"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="myApplicationsTab">
+       <attribute name="title">
+        <string>Мои заявки</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <item>
+               <widget class="QLabel" name="label_3">
+                <property name="text">
+                 <string>Тип выплаты</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="myApplicationTypeEdit"/>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QLabel" name="label">
+                <property name="text">
+                 <string>Статус заявки</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="myApplicationsStatusComboBox"/>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>Дата подачи</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDateEdit" name="myApplicationDateEdit"/>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="myApplicationFilterOK">
+              <property name="text">
+               <string>Применить</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTableView" name="myApplicationsTableView"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="acceptedApplications">
+       <attribute name="title">
+        <string>Принятые заявки</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <item>
+               <widget class="QLabel" name="label_4">
+                <property name="text">
+                 <string>Тип выплаты</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="paymentTypeComboBox"/>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_11">
+              <item>
+               <widget class="QLabel" name="label_6">
+                <property name="text">
+                 <string>Дата принятия</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDateEdit" name="acceptDateEdit"/>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
+            <item>
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="acceptedApplicationFilterOK">
+              <property name="text">
+               <string>Применить</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTableView" name="acceptedApplicationsTableView"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="showApplicationDoc">
+            <property name="text">
+             <string>Просмотр справки</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="saveApplicationDoc">
+            <property name="text">
+             <string>Сохранить как</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="applicationMenu">
+    <property name="title">
+     <string>Заявки</string>
+    </property>
+    <addaction name="newApplicationAct"/>
+    <addaction name="separator"/>
+    <addaction name="separator"/>
+    <addaction name="myApplicationsAct"/>
+    <addaction name="acceptedApplicationsAct"/>
+   </widget>
+   <widget class="QMenu" name="dataMenu">
+    <property name="title">
+     <string>Мои данные</string>
+    </property>
+    <addaction name="editApplicantDataAct"/>
+    <addaction name="editPassportAct"/>
+    <addaction name="editSnilsAct"/>
+    <addaction name="editPolicyAct"/>
+    <addaction name="editAdoptationCertificateAct"/>
+    <addaction name="bankEditAct"/>
+    <addaction name="separator"/>
+    <addaction name="editRegistrationAddressAct"/>
+    <addaction name="editActualAddressAct"/>
+    <addaction name="separator"/>
+    <addaction name="logoutAct"/>
+   </widget>
+   <widget class="QMenu" name="winMenu">
+    <property name="title">
+     <string>Окно</string>
+    </property>
+    <addaction name="fullscreenAct"/>
+    <addaction name="exitAct"/>
+   </widget>
+   <widget class="QMenu" name="aboutMenu">
+    <property name="title">
+     <string>Справка</string>
+    </property>
+    <addaction name="branchOfficesAct"/>
+    <addaction name="separator"/>
+    <addaction name="aboutAct"/>
+   </widget>
+   <addaction name="applicationMenu"/>
+   <addaction name="dataMenu"/>
+   <addaction name="winMenu"/>
+   <addaction name="aboutMenu"/>
+  </widget>
+  <action name="newApplicationAct">
+   <property name="text">
+    <string>Создать заявку</string>
+   </property>
+  </action>
+  <action name="editApplicantDataAct">
+   <property name="text">
+    <string>Изменить основные данные</string>
+   </property>
+  </action>
+  <action name="editPassportAct">
+   <property name="text">
+    <string>Изменить паспортные данные</string>
+   </property>
+  </action>
+  <action name="editSnilsAct">
+   <property name="text">
+    <string>Изменить данные СНИЛС</string>
+   </property>
+  </action>
+  <action name="editPolicyAct">
+   <property name="text">
+    <string>Изменить данные Полиса ОМС</string>
+   </property>
+  </action>
+  <action name="editAdoptationCertificateAct">
+   <property name="text">
+    <string>Изменить данные свидетельства об усыновлении</string>
+   </property>
+  </action>
+  <action name="editRegistrationAddressAct">
+   <property name="text">
+    <string>Изменить адрес регистрации</string>
+   </property>
+  </action>
+  <action name="editActualAddressAct">
+   <property name="text">
+    <string>Изменить фактический адрес проживания</string>
+   </property>
+  </action>
+  <action name="fullscreenAct">
+   <property name="text">
+    <string>Полноэкранный режим</string>
+   </property>
+  </action>
+  <action name="exitAct">
+   <property name="text">
+    <string>Выйти</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::QuitRole</enum>
+   </property>
+  </action>
+  <action name="logoutAct">
+   <property name="text">
+    <string>Выйти из профиля</string>
+   </property>
+  </action>
+  <action name="myApplicationsAct">
+   <property name="text">
+    <string>Мои заявки</string>
+   </property>
+  </action>
+  <action name="acceptedApplicationsAct">
+   <property name="text">
+    <string>Принятые заявки</string>
+   </property>
+  </action>
+  <action name="branchOfficesAct">
+   <property name="text">
+    <string>Список филиалов</string>
+   </property>
+  </action>
+  <action name="aboutAct">
+   <property name="text">
+    <string>О программе</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::AboutRole</enum>
+   </property>
+  </action>
+  <action name="bankEditAct">
+   <property name="text">
+    <string>Изменить данные банковского счета</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

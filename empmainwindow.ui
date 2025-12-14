@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EmpMainWindow</class>
+ <widget class="QMainWindow" name="EmpMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Интерактивный помощник для составления заявлений на получение социальных выплат (Режим сотрудника)</string>
+  </property>
+  <property name="windowIcon">
+   <iconset theme="QIcon::ThemeIcon::DocumentNew"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="empApplicationsTab">
+       <attribute name="title">
+        <string>Список заявок</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QTableView" name="tableView"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_3">
+            <property name="text">
+             <string>Открыть</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="empReadTab">
+       <attribute name="title">
+        <string>Чтение текста заявки</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QTextBrowser" name="textBrowser"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="text">
+             <string>Отклонить</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>Принять</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>640</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="empDataMenu">
+    <property name="title">
+     <string>Мои данные</string>
+    </property>
+    <addaction name="empDataEditAct"/>
+    <addaction name="empEditPassportAct"/>
+    <addaction name="separator"/>
+    <addaction name="empLogoutAct"/>
+   </widget>
+   <widget class="QMenu" name="empWinMenu">
+    <property name="title">
+     <string>Окно</string>
+    </property>
+    <addaction name="empFullscreenAct"/>
+    <addaction name="empQuitAct"/>
+   </widget>
+   <widget class="QMenu" name="empAboutMenu">
+    <property name="title">
+     <string>Справка</string>
+    </property>
+    <addaction name="empAboutAct"/>
+   </widget>
+   <addaction name="empDataMenu"/>
+   <addaction name="empWinMenu"/>
+   <addaction name="empAboutMenu"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="empAboutAct">
+   <property name="text">
+    <string>О программе</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::AboutRole</enum>
+   </property>
+  </action>
+  <action name="empDataEditAct">
+   <property name="text">
+    <string>Изменить основные данные</string>
+   </property>
+  </action>
+  <action name="empEditPassportAct">
+   <property name="text">
+    <string>Изменить паспортные данные</string>
+   </property>
+  </action>
+  <action name="empLogoutAct">
+   <property name="text">
+    <string>Выйти из профиля</string>
+   </property>
+  </action>
+  <action name="empFullscreenAct">
+   <property name="text">
+    <string>Полноэкранный режим</string>
+   </property>
+  </action>
+  <action name="empQuitAct">
+   <property name="text">
+    <string>Выйти</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::QuitRole</enum>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
