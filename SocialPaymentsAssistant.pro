@@ -10,56 +10,38 @@ CONFIG += c++17
 
 SOURCES += \
     about.cpp \
-    addressedit.cpp \
-    adoptationcertificateedit.cpp \
-    applicantdatainsert.cpp \
-    bankedit.cpp \
+    applicantreg.cpp \
     branchofficeslist.cpp \
-    empdatainsert.cpp \
     empmainwindow.cpp \
+    empreg.cpp \
     loginwidget.cpp \
     main.cpp \
     mainwindow.cpp \
     newapplication.cpp \
-    passportedit.cpp \
-    policyedit.cpp \
-    registrationwidget.cpp \
-    snilsedit.cpp
+    registrationwidget.cpp
 
 HEADERS += \
     about.h \
-    addressedit.h \
-    adoptationcertificateedit.h \
-    applicantdatainsert.h \
-    bankedit.h \
+    applicantreg.h \
     branchofficeslist.h \
-    empdatainsert.h \
     empmainwindow.h \
+    empreg.h \
     loginwidget.h \
     mainwindow.h \
     newapplication.h \
     passportdata.h \
-    passportedit.h \
-    policyedit.h \
-    registrationwidget.h \
-    snilsedit.h
+    registrationwidget.h
 
 FORMS += \
     about.ui \
-    addressedit.ui \
-    adoptationcertificateedit.ui \
-    applicantdatainsert.ui \
-    bankedit.ui \
+    applicantreg.ui \
     branchofficeslist.ui \
-    empdatainsert.ui \
     empmainwindow.ui \
+    empreg.ui \
     loginwidget.ui \
     mainwindow.ui \
     newapplication.ui \
-    passportedit.ui \
-    policyedit.ui \
-    registrationwidget.ui \
-    snilsedit.ui
+    registrationwidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

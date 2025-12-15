@@ -16,10 +16,6 @@ public:
     explicit RegistrationWidget(QWidget *parent = nullptr);
     ~RegistrationWidget();
 
-private slots:
-    void on_loginButton_clicked();      // Кнопка "Войти"
-    void on_nextButton_clicked();       // Кнопка "Продолжить регистрацию"
-
 private:
     Ui::RegistrationWidget *ui;
 };

@@ -1,3 +1,4 @@
+#include "applicantreg.h"
 #include <QApplication>
 #include <loginwidget.h>
 #include <QSqlDatabase>
@@ -14,6 +15,8 @@ int main(int argc, char *argv[])
     db.setPassword("postgres");
     bool ok = db.open();
     qDebug() << "db = " << ok;
+    ApplicantReg* rg = new ApplicantReg();
+    rg->show();
 
 
     // Создаем виджет входа в приложение

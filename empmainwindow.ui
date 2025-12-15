@@ -115,9 +115,6 @@
     <property name="title">
      <string>Мои данные</string>
     </property>
-    <addaction name="empDataEditAct"/>
-    <addaction name="empEditPassportAct"/>
-    <addaction name="separator"/>
     <addaction name="empLogoutAct"/>
    </widget>
    <widget class="QMenu" name="empWinMenu">

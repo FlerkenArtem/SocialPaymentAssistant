@@ -227,23 +227,13 @@
     </property>
     <addaction name="newApplicationAct"/>
     <addaction name="separator"/>
-    <addaction name="separator"/>
     <addaction name="myApplicationsAct"/>
     <addaction name="acceptedApplicationsAct"/>
    </widget>
    <widget class="QMenu" name="dataMenu">
     <property name="title">
-     <string>Мои данные</string>
+     <string>Профиль</string>
     </property>
-    <addaction name="editApplicantDataAct"/>
-    <addaction name="editPassportAct"/>
-    <addaction name="editSnilsAct"/>
-    <addaction name="editPolicyAct"/>
-    <addaction name="editAdoptationCertificateAct"/>
-    <addaction name="bankEditAct"/>
-    <addaction name="separator"/>
-    <addaction name="editRegistrationAddressAct"/>
-    <addaction name="editActualAddressAct"/>
     <addaction name="separator"/>
     <addaction name="logoutAct"/>
    </widget>
