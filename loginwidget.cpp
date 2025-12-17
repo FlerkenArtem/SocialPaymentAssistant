@@ -3,6 +3,8 @@
 #include "registrationwidget.h"
 #include "mainwindow.h"
 #include "empmainwindow.h"
+#include "mainwindow.h"
+#include "empmainwindow.h"
 #include <QSqlError>
 
 LoginWidget::LoginWidget(QWidget *parent)
@@ -10,8 +12,6 @@ LoginWidget::LoginWidget(QWidget *parent)
     , ui(new Ui::LoginWidget)
 {
     ui->setupUi(this);
-    connect(ui->endLoginButton, &QPushButton::clicked, this, &LoginWidget::on_endLoginButton_clicked);
-    connect(ui->startRegisterButton, &QPushButton::clicked, this, &LoginWidget::on_startRegisterButton_clicked);
 }
 
 LoginWidget::~LoginWidget()
@@ -63,5 +63,6 @@ void LoginWidget::on_startRegisterButton_clicked()
 {
     RegistrationWidget *regWidget = new RegistrationWidget();
     regWidget->show();
+    regWidget->setAttribute(Qt::WA_DeleteOnClose);
     this->close(); // Закрываем окно входа
 }

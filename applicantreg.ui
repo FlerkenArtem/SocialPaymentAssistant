@@ -42,9 +42,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
+        <y>-1974</y>
         <width>599</width>
-        <height>2340</height>
+        <height>2501</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -62,7 +62,11 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="login"/>
+           <widget class="QLineEdit" name="login">
+            <property name="maxLength">
+             <number>100</number>
+            </property>
+           </widget>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_18">
@@ -86,6 +90,9 @@
             <property name="maxLength">
              <number>20</number>
             </property>
+            <property name="echoMode">
+             <enum>QLineEdit::EchoMode::Password</enum>
+            </property>
            </widget>
           </item>
           <item row="3" column="0">
@@ -99,6 +106,9 @@
            <widget class="QLineEdit" name="password2">
             <property name="maxLength">
              <number>20</number>
+            </property>
+            <property name="echoMode">
+             <enum>QLineEdit::EchoMode::Password</enum>
             </property>
            </widget>
           </item>
@@ -160,7 +170,11 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QLineEdit" name="phone"/>
+           <widget class="QLineEdit" name="phone">
+            <property name="maxLength">
+             <number>18</number>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -649,7 +663,7 @@
               <widget class="QDateEdit" name="birthDate"/>
              </item>
              <item row="6" column="1">
-              <widget class="QPushButton" name="pushButton">
+              <widget class="QPushButton" name="passportScan">
                <property name="text">
                 <string>Добавить</string>
                </property>
@@ -677,7 +691,7 @@
             <item>
              <widget class="QLineEdit" name="lineEdit_6">
               <property name="maxLength">
-               <number>15</number>
+               <number>12</number>
               </property>
              </widget>
             </item>
@@ -797,6 +811,40 @@
             </layout>
            </widget>
           </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_11">
+            <property name="title">
+             <string>Данные полиса ОМС</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_10">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_34">
+               <item>
+                <widget class="QLabel" name="label_47">
+                 <property name="text">
+                  <string>Номер</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="policyNumberEdit">
+                 <property name="maxLength">
+                  <number>16</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QPushButton" name="policyAddScan">
+               <property name="text">
+                <string>Добавить скан</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -830,7 +878,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="bikEdit"/>
+             <widget class="QLineEdit" name="bikEdit">
+              <property name="maxLength">
+               <number>9</number>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -844,7 +896,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="innEdit"/>
+             <widget class="QLineEdit" name="innEdit">
+              <property name="maxLength">
+               <number>10</number>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -858,7 +914,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="kppEdit"/>
+             <widget class="QLineEdit" name="kppEdit">
+              <property name="maxLength">
+               <number>9</number>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -872,7 +932,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="correspondentsAccountEdit"/>
+             <widget class="QLineEdit" name="correspondentsAccountEdit">
+              <property name="maxLength">
+               <number>25</number>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -886,7 +950,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="surnameBank"/>
+             <widget class="QLineEdit" name="surnameBank">
+              <property name="maxLength">
+               <number>140</number>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -900,7 +968,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="nameBsnk"/>
+             <widget class="QLineEdit" name="nameBank">
+              <property name="maxLength">
+               <number>2250</number>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -914,7 +986,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="patronymicBank"/>
+             <widget class="QLineEdit" name="patronymicBank">
+              <property name="maxLength">
+               <number>2255</number>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QCheckBox" name="noPatronymicCheckBank">
@@ -935,7 +1011,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="recepientsAccount"/>
+             <widget class="QLineEdit" name="recepientsAccount">
+              <property name="maxLength">
+               <number>25</number>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -950,6 +1030,27 @@
             </item>
             <item>
              <widget class="QDateEdit" name="openningDate"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_35">
+            <item>
+             <widget class="QLabel" name="label_48">
+              <property name="text">
+               <string>Номер телефона банка</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="bankPhone">
+              <property name="maxLength">
+               <number>18</number>
+              </property>
+              <property name="frame">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -976,7 +1077,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="empRegOK">
+      <widget class="QPushButton" name="applicantRegOK">
        <property name="text">
         <string>OK</string>
        </property>

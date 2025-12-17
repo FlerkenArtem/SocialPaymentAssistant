@@ -16,6 +16,11 @@ public:
     explicit RegistrationWidget(QWidget *parent = nullptr);
     ~RegistrationWidget();
 
+private slots:
+    void on_loginButton_clicked();
+    void on_nextButton_clicked();
+    void updateNextButtonState();
+
 private:
     Ui::RegistrationWidget *ui;
 };

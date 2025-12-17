@@ -15,6 +15,10 @@ public:
     explicit About(QWidget *parent = nullptr);
     ~About();
 
+private slots:
+    void loadReadme();
+    void on_aboutCloseButton_clicked();
+
 private:
     Ui::About *ui;
 };

@@ -10,24 +10,34 @@ CONFIG += c++17
 
 SOURCES += \
     about.cpp \
+    acceptedapplicationsmodel.cpp \
     applicantreg.cpp \
+    applicationsproxymodel.cpp \
     branchofficeslist.cpp \
+    branchofficeslistmodel.cpp \
+    branchofficesproxymodel.cpp \
     empmainwindow.cpp \
     empreg.cpp \
     loginwidget.cpp \
     main.cpp \
     mainwindow.cpp \
+    myapplicationsmodel.cpp \
     newapplication.cpp \
     registrationwidget.cpp
 
 HEADERS += \
     about.h \
+    acceptedapplicationsmodel.h \
     applicantreg.h \
+    applicationsproxymodel.h \
     branchofficeslist.h \
+    branchofficeslistmodel.h \
+    branchofficesproxymodel.h \
     empmainwindow.h \
     empreg.h \
     loginwidget.h \
     mainwindow.h \
+    myapplicationsmodel.h \
     newapplication.h \
     passportdata.h \
     registrationwidget.h
@@ -47,3 +57,5 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES +=
