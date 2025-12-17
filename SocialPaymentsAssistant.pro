@@ -1,4 +1,4 @@
-QT       += core gui sql
+QT       += core gui sql printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,6 +16,7 @@ SOURCES += \
     branchofficeslist.cpp \
     branchofficeslistmodel.cpp \
     branchofficesproxymodel.cpp \
+    empapplicationsmodel.cpp \
     empmainwindow.cpp \
     empreg.cpp \
     loginwidget.cpp \
@@ -23,6 +24,7 @@ SOURCES += \
     mainwindow.cpp \
     myapplicationsmodel.cpp \
     newapplication.cpp \
+    pdfdocumentgenerator.cpp \
     registrationwidget.cpp
 
 HEADERS += \
@@ -33,6 +35,7 @@ HEADERS += \
     branchofficeslist.h \
     branchofficeslistmodel.h \
     branchofficesproxymodel.h \
+    empapplicationsmodel.h \
     empmainwindow.h \
     empreg.h \
     loginwidget.h \
@@ -40,6 +43,7 @@ HEADERS += \
     myapplicationsmodel.h \
     newapplication.h \
     passportdata.h \
+    pdfdocumentgenerator.h \
     registrationwidget.h
 
 FORMS += \

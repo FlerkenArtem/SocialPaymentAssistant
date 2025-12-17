@@ -45,6 +45,7 @@ void BranchOfficesList::on_acceptBranchOfficeFilterButton_clicked()
 void BranchOfficesList::on_branchOfficeClose_clicked()
 {
     this->close();
+
 }
 
 void BranchOfficesList::setupTableView()

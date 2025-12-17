@@ -627,10 +627,23 @@ void ApplicantReg::on_applicantRegOK_clicked()
     query.bindValue(":p_bank_phone", bank_phone);
 
     if (query.exec()) {
-        QMessageBox::information(this, "Успех", "Заявитель успешно зарегистрирован!");
-        MainWindow* mw = new MainWindow();
-        this->close();
-        mw->show();
+        // Получаем ID нового заявителя
+        QSqlQuery idQuery;
+        idQuery.prepare(
+            "SELECT a.applicant_id FROM applicant a "
+            "JOIN account ac ON a.account_id = ac.account_id "
+            "WHERE ac.username = :login"
+            );
+        idQuery.bindValue(":login", ui->login->text());
+
+        if (idQuery.exec() && idQuery.next()) {
+            int applicantId = idQuery.value(0).toInt();
+            MainWindow* mw = new MainWindow(applicantId);
+            this->close();
+            mw->show();
+        } else {
+            QMessageBox::warning(this, "Ошибка", "Не удалось получить ID заявителя");
+        }
     } else {
         QString errorText = query.lastError().text();
         QMessageBox::critical(this, "Ошибка регистрации",

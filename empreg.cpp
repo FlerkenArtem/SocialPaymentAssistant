@@ -297,9 +297,23 @@ void EmpReg::on_empRegOK_clicked()
 
     if (query.exec()) {
         QMessageBox::information(this, "Успех", "Сотрудник успешно зарегистрирован!");
-        EmpMainWindow* emw = new EmpMainWindow();
-        this->close();
-        emw->show();
+
+        // Получаем ID только что созданного сотрудника
+        QSqlQuery idQuery;
+        idQuery.prepare(
+            "SELECT e.employee_id "
+            "FROM employee e "
+            "JOIN account a ON e.account_id = a.account_id "
+            "WHERE a.login = :username"
+            );
+        idQuery.bindValue(":username", username);
+
+        if (idQuery.exec() && idQuery.next()) {
+            int employeeId = idQuery.value(0).toInt();
+            EmpMainWindow *empWindow = new EmpMainWindow(employeeId);
+            empWindow->show();
+            this->close();
+        }
     } else {
         QMessageBox::critical(this, "Ошибка регистрации",
                               "Не удалось зарегистрировать сотрудника:\n" +

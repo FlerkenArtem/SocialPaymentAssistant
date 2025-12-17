@@ -21,7 +21,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="empApplicationsTab">
        <attribute name="title">
@@ -47,7 +47,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_3">
+           <widget class="QPushButton" name="open">
             <property name="text">
              <string>Открыть</string>
             </property>
@@ -81,14 +81,14 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="cancel">
             <property name="text">
              <string>Отклонить</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="accept">
             <property name="text">
              <string>Принять</string>
             </property>

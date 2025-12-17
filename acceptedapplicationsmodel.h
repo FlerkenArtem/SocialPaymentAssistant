@@ -11,7 +11,7 @@ struct AcceptedApplicationData {
     QString paymentType;
     QDate acceptanceDate;
     double amount;
-    QByteArray certificateData; // ODT документ
+    QByteArray certificateData; // документ
     QString certificateFileName;
 };
 
