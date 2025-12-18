@@ -1,4 +1,4 @@
-QT       += core gui sql printsupport
+QT       += core gui sql printsupport testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

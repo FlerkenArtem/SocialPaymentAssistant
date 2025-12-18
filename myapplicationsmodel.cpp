@@ -36,7 +36,7 @@ QVariant MyApplicationsModel::data(const QModelIndex &index, int role) const
         case 6: return app.considerationDate.isValid() ? app.considerationDate.toString("dd.MM.yyyy") : "Не рассмотрена";
         }
     } else if (role == Qt::UserRole) {
-        return app.applicationId; // Для получения ID заявки
+        return app.applicationId;
     }
 
     return QVariant();
@@ -72,16 +72,16 @@ void MyApplicationsModel::refreshData()
 
     QSqlQuery query;
     query.prepare(
-        "SELECT a.application_id, pt.type_name, s.status_name, "
-        "a.application_date, a.amount, "
+        "SELECT a.application_id, tosp.type_name, appstat.status, "
+        "a.date_of_creation, a.amount, "
         "COALESCE(e.surname || ' ' || LEFT(e.name, 1) || '. ' || LEFT(e.patronymic, 1) || '.', ''), "
-        "a.consideration_date "
+        "a.date_of_creation "
         "FROM application a "
-        "JOIN payment_type pt ON a.payment_type_id = pt.payment_type_id "
-        "JOIN status s ON a.status_id = s.status_id "
+        "JOIN type_of_social_payment tosp ON a.type_of_social_payment_id = tosp.type_of_social_payment_id "
+        "JOIN application_status appstat ON a.application_status_id = appstat.application_status_id "
         "LEFT JOIN employee e ON a.employee_id = e.employee_id "
         "WHERE a.applicant_id = :applicant_id "
-        "ORDER BY a.application_date DESC"
+        "ORDER BY a.date_of_creation DESC"
         );
     query.bindValue(":applicant_id", m_applicantId);
 
@@ -97,6 +97,9 @@ void MyApplicationsModel::refreshData()
             app.considerationDate = query.value(6).toDate();
             m_applications.append(app);
         }
+    } else {
+        qDebug() << "Ошибка MyApplicationsModel:" << query.lastError().text();
+        qDebug() << "Запрос:" << query.lastQuery();
     }
 
     endResetModel();

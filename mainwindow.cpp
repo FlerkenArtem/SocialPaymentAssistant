@@ -64,7 +64,7 @@ void MainWindow::loadPaymentTypes()
     ui->myApplicationTypeEdit->addItem("Все");
     ui->paymentTypeComboBox->addItem("Все");
 
-    QSqlQuery query("SELECT type_name FROM payment_type ORDER BY type_name");
+    QSqlQuery query("SELECT type_name FROM type_of_social_payment ORDER BY type_name");
     while (query.next()) {
         QString type = query.value(0).toString();
         ui->myApplicationTypeEdit->addItem(type);
@@ -77,7 +77,7 @@ void MainWindow::loadStatuses()
     ui->myApplicationsStatusComboBox->clear();
     ui->myApplicationsStatusComboBox->addItem("Все");
 
-    QSqlQuery query("SELECT status_name FROM status ORDER BY status_name");
+    QSqlQuery query("SELECT status FROM application_status ORDER BY status");
     while (query.next()) {
         ui->myApplicationsStatusComboBox->addItem(query.value(0).toString());
     }

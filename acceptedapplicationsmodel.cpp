@@ -1,4 +1,5 @@
 #include "acceptedapplicationsmodel.h"
+#include "qsqlerror.h"
 
 AcceptedApplicationsModel::AcceptedApplicationsModel(int applicantId, QObject *parent)
     : QAbstractTableModel(parent), m_applicantId(applicantId)
@@ -33,10 +34,9 @@ QVariant AcceptedApplicationsModel::data(const QModelIndex &index, int role) con
         case 3: return QString::number(app.amount, 'f', 2);
         }
     } else if (role == Qt::UserRole) {
-        // Возвращаем данные для разных колонок
         switch (index.column()) {
-        case 4: return app.certificateData; // Документ
-        case 5: return app.certificateFileName; // Имя файла
+        case 4: return app.certificateData;
+        case 5: return app.certificateFileName; // Пустая строка
         default: return app.applicationId;
         }
     }
@@ -71,15 +71,15 @@ void AcceptedApplicationsModel::refreshData()
 
     QSqlQuery query;
     query.prepare(
-        "SELECT a.application_id, pt.type_name, a.acceptance_date, "
-        "a.amount, c.document, c.file_name "
+        "SELECT a.application_id, tosp.type_name, "
+        "c.date_and_time_of_creation, " // acceptance_date заменен на date_and_time_of_creation из certificate
+        "a.amount, c.document "
         "FROM application a "
-        "JOIN payment_type pt ON a.payment_type_id = pt.payment_type_id "
-        "LEFT JOIN certificate c ON a.application_id = c.application_id "
+        "JOIN type_of_social_payment tosp ON a.type_of_social_payment_id = tosp.type_of_social_payment_id "
+        "JOIN certificate c ON a.application_id = c.application_id "
         "WHERE a.applicant_id = :applicant_id "
-        "AND a.status_id = (SELECT status_id FROM status WHERE status_name = 'Принята') "
-        "AND a.acceptance_date IS NOT NULL "
-        "ORDER BY a.acceptance_date DESC"
+        "AND a.application_status_id = (SELECT application_status_id FROM application_status WHERE status = 'Принята') "
+        "ORDER BY c.date_and_time_of_creation DESC"
         );
     query.bindValue(":applicant_id", m_applicantId);
 
@@ -91,9 +91,12 @@ void AcceptedApplicationsModel::refreshData()
             app.acceptanceDate = query.value(2).toDate();
             app.amount = query.value(3).toDouble();
             app.certificateData = query.value(4).toByteArray();
-            app.certificateFileName = query.value(5).toString();
+            app.certificateFileName = ""; // В ЛР5 нет поля file_name в certificate
             m_applications.append(app);
         }
+    } else {
+        qDebug() << "Ошибка AcceptedApplicationsModel:" << query.lastError().text();
+        qDebug() << "Запрос:" << query.lastQuery();
     }
 
     endResetModel();

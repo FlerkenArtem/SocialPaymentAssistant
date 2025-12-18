@@ -4,6 +4,7 @@
 #include "ui_empmainwindow.h"
 #include "pdfdocumentgenerator.h"
 #include <QSqlQuery>
+#include <QSqlRecord>
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QDateTime>
@@ -23,9 +24,9 @@ EmpMainWindow::EmpMainWindow(int employeeId, QWidget *parent)
     // Получаем информацию о сотруднике для отображения
     QSqlQuery query;
     query.prepare(
-        "SELECT surname, name, patronymic, position_name "
+        "SELECT e.surname, e.name, e.patronymic, ep.position "
         "FROM employee e "
-        "JOIN position p ON e.position_id = p.position_id "
+        "JOIN employee_position ep ON e.employee_position_id = ep.employee_position_id "
         "WHERE e.employee_id = :employee_id"
         );
     query.bindValue(":employee_id", m_employeeId);
@@ -39,6 +40,9 @@ EmpMainWindow::EmpMainWindow(int employeeId, QWidget *parent)
         QString title = QString("Сотрудник: %1 %2 %3 (%4)")
                             .arg(surname).arg(name).arg(patronymic).arg(position);
         setWindowTitle(title);
+    } else {
+        QMessageBox::warning(this, "Ошибка",
+                             "Не удалось загрузить данные сотрудника: " + query.lastError().text());
     }
 
     // Инициализируем модель заявок
@@ -51,7 +55,6 @@ EmpMainWindow::EmpMainWindow(int employeeId, QWidget *parent)
     // Устанавливаем начальную вкладку
     ui->tabWidget->setCurrentIndex(0);
 }
-
 EmpMainWindow::~EmpMainWindow()
 {
     delete ui;
@@ -124,61 +127,76 @@ void EmpMainWindow::on_accept_clicked()
         return;
     }
 
-    // Получаем текущую сумму заявки
-    QSqlQuery amountQuery;
-    amountQuery.prepare("SELECT amount FROM application WHERE application_id = :id");
-    amountQuery.bindValue(":id", m_currentApplicationId);
-    double requestedAmount = 0;
-    if (amountQuery.exec() && amountQuery.next()) {
-        requestedAmount = amountQuery.value(0).toDouble();
-    }
-
-    // Диалог для подтверждения и изменения суммы
-    bool ok;
-    QString password = QInputDialog::getText(this, "Подтверждение принятия",
-                                             "Введите ваш пароль:",
-                                             QLineEdit::Password, "", &ok);
-
-    if (!ok || password.isEmpty()) {
-        return;
-    }
-
-    double approvedAmount = QInputDialog::getDouble(this, "Сумма выплаты",
-                                                    "Введите сумму выплаты:",
-                                                    requestedAmount, 0, 10000000, 2, &ok);
-    if (!ok) {
-        return;
-    }
-
-    QMessageBox msgBox(this);
-    msgBox.setWindowTitle("Подтверждение принятия");
-    msgBox.setText("Вы уверены, что хотите принять заявку?");
-    msgBox.setInformativeText(QString("Сумма выплаты: %1 руб.\nДанное действие необратимо.")
-                                  .arg(approvedAmount, 0, 'f', 2));
-    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
-    msgBox.setDefaultButton(QMessageBox::Cancel);
-
-    if (msgBox.exec() == QMessageBox::Yes) {
-        // Вызов хранимой процедуры accept_application
-        QSqlQuery query;
-        query.prepare("CALL accept_application(:application_id, :employee_password, :new_amount)");
-        query.bindValue(":application_id", m_currentApplicationId);
-        query.bindValue(":employee_password", password);
-        query.bindValue(":new_amount", approvedAmount);
-
-        if (query.exec()) {
-            // Генерация и сохранение PDF-документа с использованием PdfDocumentGenerator
-            generateAndSaveCertificate(m_currentApplicationId, requestedAmount, approvedAmount);
-
-            QMessageBox::information(this, "Успех", "Заявка успешно принята и документ сформирован");
-            refreshApplicationData();
-            ui->textBrowser->clear();
-            m_currentApplicationId = -1;
-            ui->tabWidget->setCurrentIndex(0); // Возвращаемся к списку
-        } else {
-            QMessageBox::critical(this, "Ошибка",
-                                  "Не удалось принять заявку:\n" + query.lastError().text());
+    try {
+        // Получаем текущую сумму заявки
+        QSqlQuery amountQuery;
+        amountQuery.prepare("SELECT amount FROM application WHERE application_id = :id");
+        amountQuery.bindValue(":id", m_currentApplicationId);
+        double requestedAmount = 0;
+        if (amountQuery.exec() && amountQuery.next()) {
+            requestedAmount = amountQuery.value(0).toDouble();
+            qDebug() << "Запрашиваемая сумма:" << requestedAmount;
         }
+
+        // Диалог для подтверждения и изменения суммы
+        bool ok;
+        QString password = QInputDialog::getText(this, "Подтверждение принятия",
+                                                 "Введите ваш пароль:",
+                                                 QLineEdit::Password, "", &ok);
+
+        if (!ok || password.isEmpty()) {
+            return;
+        }
+
+        double approvedAmount = QInputDialog::getDouble(this, "Сумма выплаты",
+                                                        "Введите сумму выплаты:",
+                                                        requestedAmount, 0, 10000000, 2, &ok);
+        if (!ok) {
+            return;
+        }
+
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Подтверждение принятия",
+                                      QString("Вы уверены, что хотите принять заявку?\n"
+                                              "Сумма выплаты: %1 руб.\n"
+                                              "Данное действие необратимо.")
+                                          .arg(approvedAmount, 0, 'f', 2),
+                                      QMessageBox::Yes | QMessageBox::No);
+
+        if (reply == QMessageBox::Yes) {
+            // Вызов хранимой процедуры accept_application
+            QSqlQuery query;
+            query.prepare("CALL accept_application(:application_id, :employee_password, :new_amount)");
+            query.bindValue(":application_id", m_currentApplicationId);
+            query.bindValue(":employee_password", password);
+            query.bindValue(":new_amount", approvedAmount);
+
+            if (query.exec()) {
+                qDebug() << "Хранимая процедура accept_application выполнена успешно";
+
+                // Генерация и сохранение PDF-документа
+                generateAndSaveCertificate(m_currentApplicationId, requestedAmount, approvedAmount);
+
+                QMessageBox::information(this, "Успех", "Заявка успешно принята и документ сформирован");
+                refreshApplicationData();
+                ui->textBrowser->clear();
+                m_currentApplicationId = -1;
+                ui->tabWidget->setCurrentIndex(0);
+            } else {
+                QString error = query.lastError().text();
+                QMessageBox::critical(this, "Ошибка",
+                                      "Не удалось принять заявку:\n" + error);
+                qDebug() << "Ошибка при выполнении хранимой процедуры:" << error;
+            }
+        }
+    } catch (const std::exception &e) {
+        QMessageBox::critical(this, "Критическая ошибка",
+                              QString("Произошла критическая ошибка:\n%1").arg(e.what()));
+        qCritical() << "Критическая ошибка в on_accept_clicked:" << e.what();
+    } catch (...) {
+        QMessageBox::critical(this, "Неизвестная ошибка",
+                              "Произошла неизвестная критическая ошибка");
+        qCritical() << "Неизвестная критическая ошибка в on_accept_clicked";
     }
 }
 
@@ -227,25 +245,32 @@ void EmpMainWindow::showApplicationDetails(int applicationId)
         "SELECT "
         "a.application_id, "
         "app.surname || ' ' || app.name || COALESCE(' ' || app.patronymic, '') as applicant_fio, "
-        "pt.type_name, "
+        "tosp.type_name, "
         "a.amount, "
         "a.date_of_creation, "
         "ast.status, "
         "e.surname || ' ' || e.name || COALESCE(' ' || e.patronymic, '') as employee_fio, "
-        "p.position_name, "
+        "ep.position, "
         "app.inn, "
-        "app.phone_number "
+        "app.phone_number, "
+        "app.applicant_id "
         "FROM application a "
         "JOIN applicant app ON a.applicant_id = app.applicant_id "
-        "JOIN type_of_social_payment pt ON a.type_of_social_payment_id = pt.type_of_social_payment_id "
+        "JOIN type_of_social_payment tosp ON a.type_of_social_payment_id = tosp.type_of_social_payment_id "
         "JOIN application_status ast ON a.application_status_id = ast.application_status_id "
         "JOIN employee e ON a.employee_id = e.employee_id "
-        "JOIN position p ON e.position_id = p.position_id "
+        "JOIN employee_position ep ON e.employee_position_id = ep.employee_position_id "
         "WHERE a.application_id = :application_id"
         );
     query.bindValue(":application_id", applicationId);
 
-    if (query.exec() && query.next()) {
+    if (!query.exec()) {
+        QMessageBox::critical(this, "Ошибка запроса",
+                              "Не удалось выполнить запрос:\n" + query.lastError().text());
+        return;
+    }
+
+    if (query.next()) {
         QString details = QString(
                               "<h2>Детали заявки #%1</h2>"
                               "<table border='1' cellpadding='5' style='border-collapse: collapse;'>"
@@ -259,6 +284,7 @@ void EmpMainWindow::showApplicationDetails(int applicationId)
                               "<tr><td><b>Статус:</b></td><td>%8</td></tr>"
                               "<tr><td><b>Ответственный сотрудник:</b></td><td>%9</td></tr>"
                               "<tr><td><b>Должность:</b></td><td>%10</td></tr>"
+                              "<tr><td><b>ID заявителя:</b></td><td>%11</td></tr>"
                               "</table>"
                               "<p><i>Для принятия или отклонения заявки используйте кнопки ниже</i></p>"
                               )
@@ -271,55 +297,56 @@ void EmpMainWindow::showApplicationDetails(int applicationId)
                               .arg(query.value(4).toDateTime().toString("dd.MM.yyyy HH:mm"))
                               .arg(query.value(5).toString())
                               .arg(query.value(6).toString())
-                              .arg(query.value(7).toString());
+                              .arg(query.value(7).toString())
+                              .arg(query.value(10).toInt());
 
         ui->textBrowser->setHtml(details);
+    } else {
+        QMessageBox::warning(this, "Предупреждение",
+                             "Заявка с ID " + QString::number(applicationId) + " не найдена в базе данных.");
     }
 }
 
 void EmpMainWindow::generateAndSaveCertificate(int applicationId, double requestedAmount, double approvedAmount)
 {
-    // Получаем полные данные для справки
+    qDebug() << "Начинаем генерацию сертификата для заявки:" << applicationId;
+
+    // Получаем базовые данные для справки (упрощенный запрос)
     QSqlQuery query;
     query.prepare(
         "SELECT "
         "a.application_id, "
         "app.surname || ' ' || app.name || COALESCE(' ' || app.patronymic, '') as applicant_fio, "
-        "pt.type_name, "
+        "tosp.type_name, "
         "a.date_of_creation, "
         "e.surname || ' ' || e.name || COALESCE(' ' || e.patronymic, '') as employee_fio, "
-        "p.position_name, "
-        "b.name_branch, "
+        "ep.position, "
         "app.inn, "
-        "app.phone_number, "
-        "addr_reg.postal_code, "
-        "reg.name_region, "
-        "city.name_city, "
-        "street.name_street, "
-        "house.name_house, "
-        "COALESCE(flat.name_flat, '-') "
+        "app.phone_number "
         "FROM application a "
         "JOIN applicant app ON a.applicant_id = app.applicant_id "
-        "JOIN type_of_social_payment pt ON a.type_of_social_payment_id = pt.type_of_social_payment_id "
+        "JOIN type_of_social_payment tosp ON a.type_of_social_payment_id = tosp.type_of_social_payment_id "
         "JOIN employee e ON a.employee_id = e.employee_id "
-        "JOIN position p ON e.position_id = p.position_id "
-        "JOIN branch b ON e.branch_id = b.branch_id "
-        "JOIN address addr_reg ON app.registration_address_id = addr_reg.address_id "
-        "JOIN region reg ON addr_reg.region_id = reg.region_id "
-        "JOIN city ON addr_reg.city_id = city.city_id "
-        "JOIN street ON addr_reg.street_id = street.street_id "
-        "JOIN house ON addr_reg.house_id = house.house_id "
-        "LEFT JOIN flat ON addr_reg.flat_id = flat.flat_id "
+        "JOIN employee_position ep ON e.employee_position_id = ep.employee_position_id "
         "WHERE a.application_id = :application_id"
         );
     query.bindValue(":application_id", applicationId);
 
-    if (!query.exec() || !query.next()) {
-        QMessageBox::warning(this, "Ошибка", "Не удалось получить данные для справки");
+    if (!query.exec()) {
+        QMessageBox::critical(this, "Ошибка SQL",
+                              "Ошибка выполнения запроса для справки:\n" + query.lastError().text());
         return;
     }
 
-    // Заполняем структуру ApplicationInfo для PdfDocumentGenerator
+    if (!query.next()) {
+        QMessageBox::warning(this, "Предупреждение",
+                             "Не удалось получить данные для справки (заявка ID: " + QString::number(applicationId) + ")");
+        return;
+    }
+
+    qDebug() << "Данные для справки получены";
+
+    // Заполняем структуру ApplicationInfo
     PdfDocumentGenerator::ApplicationInfo appInfo;
     appInfo.applicationId = applicationId;
     appInfo.applicantName = query.value(1).toString();
@@ -329,35 +356,49 @@ void EmpMainWindow::generateAndSaveCertificate(int applicationId, double request
     appInfo.approvedAmount = approvedAmount;
     appInfo.employeeName = query.value(4).toString();
     appInfo.employeePosition = query.value(5).toString();
-    appInfo.branchName = query.value(6).toString();
-    appInfo.applicantInn = query.value(7).toString();
-    appInfo.applicantPhone = query.value(8).toString();
+    appInfo.branchName = "Отделение социальных выплат"; // Упрощенно
+    appInfo.applicantInn = query.value(6).toString();
+    appInfo.applicantPhone = query.value(7).toString();
+    appInfo.applicantAddress = "Адрес по регистрации"; // Упрощенно
 
-    // Формируем адрес
-    appInfo.applicantAddress = QString("%1, %2, %3, %4, кв. %5")
-                                   .arg(query.value(9).toString())  // postal_code
-                                   .arg(query.value(10).toString()) // region
-                                   .arg(query.value(11).toString()) // city
-                                   .arg(query.value(12).toString()) // street, house
-                                   .arg(query.value(13).toString()); // flat
-
-    // Создаем генератор PDF
+    // Генерируем PDF-документ
     PdfDocumentGenerator generator;
+    QByteArray pdfData = generator.generateCertificate(appInfo);
 
-    // Опционально: сохранить в файл (для отладки)
-    QString fileName = QString("Справка_%1_%2.pdf")
-                           .arg(applicationId)
-                           .arg(QDateTime::currentDateTime().toString("ddMMyyyy_HHmmss"));
+    if (pdfData.isEmpty()) {
+        QMessageBox::warning(this, "Ошибка", "Не удалось сгенерировать PDF-документ");
+        return;
+    }
 
-    // Сохраняем в файл для проверки
-    if (generator.saveToFile(fileName, appInfo)) {
-        // Читаем файл для сохранения в БД
-        QFile file(fileName);
-        if (file.open(QIODevice::ReadOnly)) {
-            QByteArray pdfData = file.readAll();
-            file.close();
+    qDebug() << "PDF сгенерирован, размер:" << pdfData.size() << "байт";
 
-            // Сохраняем PDF в БД как BYTEA
+    // Проверяем, есть ли уже сертификат для этой заявки
+    QSqlQuery checkQuery;
+    checkQuery.prepare("SELECT COUNT(*) FROM certificate WHERE application_id = :application_id");
+    checkQuery.bindValue(":application_id", applicationId);
+
+    if (checkQuery.exec() && checkQuery.next()) {
+        int count = checkQuery.value(0).toInt();
+        if (count > 0) {
+            // Обновляем существующий сертификат
+            QSqlQuery updateQuery;
+            updateQuery.prepare(
+                "UPDATE certificate SET date_and_time_of_creation = :creation_date, document = :document "
+                "WHERE application_id = :application_id"
+                );
+            updateQuery.bindValue(":application_id", applicationId);
+            updateQuery.bindValue(":creation_date", QDateTime::currentDateTime());
+            updateQuery.bindValue(":document", pdfData);
+
+            if (!updateQuery.exec()) {
+                QMessageBox::warning(this, "Ошибка обновления",
+                                     "Не удалось обновить документ в БД:\n" + updateQuery.lastError().text());
+                qDebug() << "Ошибка SQL при обновлении:" << updateQuery.lastError().text();
+            } else {
+                qDebug() << "Сертификат обновлен для application_id:" << applicationId;
+            }
+        } else {
+            // Вставляем новый сертификат
             QSqlQuery insertQuery;
             insertQuery.prepare(
                 "INSERT INTO certificate (application_id, date_and_time_of_creation, document) "
@@ -368,14 +409,25 @@ void EmpMainWindow::generateAndSaveCertificate(int applicationId, double request
             insertQuery.bindValue(":document", pdfData);
 
             if (!insertQuery.exec()) {
-                QMessageBox::warning(this, "Ошибка",
+                QMessageBox::warning(this, "Ошибка сохранения",
                                      "Не удалось сохранить документ в БД:\n" + insertQuery.lastError().text());
+                qDebug() << "Ошибка SQL при вставке:" << insertQuery.lastError().text();
+            } else {
+                qDebug() << "Сертификат создан для application_id:" << applicationId;
             }
-
-            // Удаляем временный файл
-            QFile::remove(fileName);
         }
-    } else {
-        QMessageBox::warning(this, "Ошибка", "Не удалось сгенерировать PDF-документ");
+    }
+
+    // Проверяем результат
+    QSqlQuery verifyQuery;
+    verifyQuery.prepare("SELECT certificate_id, date_and_time_of_creation, LENGTH(document) as doc_size "
+                        "FROM certificate WHERE application_id = :application_id");
+    verifyQuery.bindValue(":application_id", applicationId);
+
+    if (verifyQuery.exec() && verifyQuery.next()) {
+        qDebug() << "Сертификат успешно сохранен в БД:";
+        qDebug() << "ID сертификата:" << verifyQuery.value(0).toInt();
+        qDebug() << "Дата создания:" << verifyQuery.value(1).toDateTime();
+        qDebug() << "Размер документа:" << verifyQuery.value(2).toInt() << "байт";
     }
 }
