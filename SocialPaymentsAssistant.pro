@@ -74,4 +74,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES +=
 
 DISTFILES += \
-    README.md
+    README.md \
+    social_payments_assistant.sql
