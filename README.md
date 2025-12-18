@@ -62,7 +62,7 @@
 
 1. Клонируйте репозиторий:
    ```bash
-   git clone <адрес репозитория>
+   git clone https://github.com/FlerkenArtem/SocialPaymentAssistant
    cd SocialPaymentsAssistant
    ```
 
@@ -158,3 +158,4 @@ SocialPaymentsAssistant/
 - При возникновении ошибок подключения к БД проверьте правильность настроек хоста, порта и учётных данных.
 - Для работы с PDF-документами необходим модуль Qt Printsupport.
 - При регистрации заявителя требуются сканы документов в формате PNG.
+
