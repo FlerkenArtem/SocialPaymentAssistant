@@ -25,7 +25,12 @@ SOURCES += \
     myapplicationsmodel.cpp \
     newapplication.cpp \
     pdfdocumentgenerator.cpp \
-    registrationwidget.cpp
+    registrationwidget.cpp \
+    tests/testempregmodule.cpp \
+    tests/testintegration.cpp \
+    tests/testload.cpp \
+    tests/testloginwidgetblackbox.cpp \
+    tests/testloginwidgetwhitebox.cpp
 
 HEADERS += \
     about.h \
@@ -42,9 +47,13 @@ HEADERS += \
     mainwindow.h \
     myapplicationsmodel.h \
     newapplication.h \
-    passportdata.h \
     pdfdocumentgenerator.h \
-    registrationwidget.h
+    registrationwidget.h \
+    tests/testempregmodule.h \
+    tests/testintegration.h \
+    tests/testload.h \
+    tests/testloginwidgetblackbox.h \
+    tests/testloginwidgetwhitebox.h
 
 FORMS += \
     about.ui \
@@ -63,3 +72,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES +=
+
+DISTFILES += \
+    README.md
